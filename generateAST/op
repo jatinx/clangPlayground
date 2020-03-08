@@ -1,0 +1,40 @@
+/usr/local/include/llvm/LTO/Config.h:191:  ModuleHookFn PreCodeGenModuleHook;
+/usr/local/include/clang/CodeGen/ModuleBuilder.h:36:  class CodeGenModule;
+/usr/local/include/clang/CodeGen/ModuleBuilder.h:47:  /// Return an opaque reference to the CodeGenModule object, which can
+/usr/local/include/clang/CodeGen/ModuleBuilder.h:50:  CodeGen::CodeGenModule &CGM();
+/usr/local/include/clang/CodeGen/ConstantInitBuilder.h:30:class CodeGenModule;
+/usr/local/include/clang/CodeGen/ConstantInitBuilder.h:58:  CodeGenModule &CGM;
+/usr/local/include/clang/CodeGen/ConstantInitBuilder.h:69:  explicit ConstantInitBuilderBase(CodeGenModule &CGM) : CGM(CGM) {}
+/usr/local/include/clang/CodeGen/ConstantInitBuilder.h:487:  ConstantInitBuilderTemplateBase(CodeGenModule &CGM)
+/usr/local/include/clang/CodeGen/ConstantInitBuilder.h:519:  explicit ConstantInitBuilder(CodeGenModule &CGM) :
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:51:class CodeGenModule;
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:53:const CGFunctionInfo &arrangeObjCMessageSendSignature(CodeGenModule &CGM,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:57:const CGFunctionInfo &arrangeFreeFunctionType(CodeGenModule &CGM,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:60:const CGFunctionInfo &arrangeFreeFunctionType(CodeGenModule &CGM,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:63:const CGFunctionInfo &arrangeCXXMethodType(CodeGenModule &CGM,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:68:const CGFunctionInfo &arrangeFreeFunctionCall(CodeGenModule &CGM,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:75:llvm::FunctionType *convertFreeFunctionType(CodeGenModule &CGM,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:78:llvm::Type *convertTypeForMemory(CodeGenModule &CGM, QualType T);
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:84:unsigned getLLVMFieldNumber(CodeGenModule &CGM,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:91:llvm::Function *getNonTrivialCStructDefaultConstructor(CodeGenModule &GCM,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:100:llvm::Function *getNonTrivialCStructCopyConstructor(CodeGenModule &CGM,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:110:llvm::Function *getNonTrivialCStructMoveConstructor(CodeGenModule &CGM,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:121:    CodeGenModule &CGM, CharUnits DstAlignment, CharUnits SrcAlignment,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:129:    CodeGenModule &CGM, CharUnits DstAlignment, CharUnits SrcAlignment,
+/usr/local/include/clang/CodeGen/CodeGenABITypes.h:136:llvm::Function *getNonTrivialCStructDestructor(CodeGenModule &CGM,
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:36:class CodeGenModule;
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:42:  CodeGenModule &CGM;
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:57:  SwiftAggLowering(CodeGenModule &CGM) : CGM(CGM) {}
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:123:bool shouldPassIndirectly(CodeGenModule &CGM,
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:128:CharUnits getMaximumVoluntaryIntegerSize(CodeGenModule &CGM);
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:131:CharUnits getNaturalAlignment(CodeGenModule &CGM, llvm::Type *type);
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:135:bool isLegalIntegerType(CodeGenModule &CGM, llvm::IntegerType *type);
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:139:bool isLegalVectorType(CodeGenModule &CGM, CharUnits vectorSize,
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:141:bool isLegalVectorType(CodeGenModule &CGM, CharUnits vectorSize,
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:146:splitLegalVectorType(CodeGenModule &CGM, CharUnits vectorSize,
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:153:void legalizeVectorType(CodeGenModule &CGM, CharUnits vectorSize,
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:165:bool mustPassRecordIndirectly(CodeGenModule &CGM, const RecordDecl *record);
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:168:ABIArgInfo classifyReturnType(CodeGenModule &CGM, CanQualType type);
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:171:ABIArgInfo classifyArgumentType(CodeGenModule &CGM, CanQualType type);
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:175:void computeABIInfo(CodeGenModule &CGM, CGFunctionInfo &FI);
+/usr/local/include/clang/CodeGen/SwiftCallingConv.h:178:bool isSwiftErrorLoweredInRegister(CodeGenModule &CGM);
