@@ -331,7 +331,7 @@ namespace aa{
 using namespace std;
 using namespace clang;
 using namespace llvm;
-constexpr auto fact = " int abc = 1; int fac(int f) { return (f < 2) ? f : f * fac(f - 1); } ";
+constexpr auto fact = " int abc = 1; int fac(int f) { return (f < 2) ? f : f * fac(f - 1); } int main() { return abc * fac(2); }";
 
 LLVMContext lc;
 static llvm::Module *Module_Ob;
