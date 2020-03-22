@@ -2,7 +2,7 @@
 clang++ compile.cc -o main -L/usr/local/lib  -I/usr/local/include -std=c++14   -fno-exceptions -fno-rtti -D_GNU_SOURCE -D_DEBUG -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/jatin/github/llvm-project/clang/lib/CodeGen -lLLVMXRay -lLLVMWindowsManifest -lLLVMTableGen -lLLVMSymbolize -lLLVMDebugInfoPDB -lLLVMOrcJIT -lLLVMOrcError -lLLVMJITLink -lLLVMObjectYAML -lLLVMMCA -lLLVMLTO -lLLVMPasses -lLLVMCoroutines -lLLVMObjCARCOpts -lLLVMLineEditor -lLLVMLibDriver -lLLVMInterpreter -lLLVMFuzzMutate -lLLVMMCJIT -lLLVMExecutionEngine -lLLVMRuntimeDyld -lLLVMDWARFLinker -lLLVMDlltoolDriver -lLLVMOption -lLLVMDebugInfoGSYM -lLLVMCoverage -lLLVMXCoreDisassembler -lLLVMXCoreCodeGen -lLLVMXCoreDesc -lLLVMXCoreInfo -lLLVMX86Disassembler -lLLVMX86AsmParser -lLLVMX86CodeGen -lLLVMX86Desc -lLLVMX86Utils -lLLVMX86Info -lLLVMWebAssemblyDisassembler -lLLVMWebAssemblyCodeGen -lLLVMWebAssemblyDesc -lLLVMWebAssemblyAsmParser -lLLVMWebAssemblyInfo -lLLVMSystemZDisassembler -lLLVMSystemZCodeGen -lLLVMSystemZAsmParser -lLLVMSystemZDesc -lLLVMSystemZInfo -lLLVMSparcDisassembler -lLLVMSparcCodeGen -lLLVMSparcAsmParser -lLLVMSparcDesc -lLLVMSparcInfo -lLLVMRISCVDisassembler -lLLVMRISCVCodeGen -lLLVMRISCVAsmParser -lLLVMRISCVDesc -lLLVMRISCVUtils -lLLVMRISCVInfo -lLLVMPowerPCDisassembler -lLLVMPowerPCCodeGen -lLLVMPowerPCAsmParser -lLLVMPowerPCDesc -lLLVMPowerPCInfo -lLLVMNVPTXCodeGen -lLLVMNVPTXDesc -lLLVMNVPTXInfo -lLLVMMSP430Disassembler -lLLVMMSP430CodeGen -lLLVMMSP430AsmParser -lLLVMMSP430Desc -lLLVMMSP430Info -lLLVMMipsDisassembler -lLLVMMipsCodeGen -lLLVMMipsAsmParser -lLLVMMipsDesc -lLLVMMipsInfo -lLLVMLanaiDisassembler -lLLVMLanaiCodeGen -lLLVMLanaiAsmParser -lLLVMLanaiDesc -lLLVMLanaiInfo -lLLVMHexagonDisassembler -lLLVMHexagonCodeGen -lLLVMHexagonAsmParser -lLLVMHexagonDesc -lLLVMHexagonInfo -lLLVMBPFDisassembler -lLLVMBPFCodeGen -lLLVMBPFAsmParser -lLLVMBPFDesc -lLLVMBPFInfo -lLLVMARMDisassembler -lLLVMARMCodeGen -lLLVMARMAsmParser -lLLVMARMDesc -lLLVMARMUtils -lLLVMARMInfo -lLLVMAMDGPUDisassembler -lLLVMAMDGPUCodeGen -lLLVMMIRParser -lLLVMipo -lLLVMInstrumentation -lLLVMVectorize -lLLVMLinker -lLLVMIRReader -lLLVMAsmParser -lLLVMFrontendOpenMP -lLLVMAMDGPUAsmParser -lLLVMAMDGPUDesc -lLLVMAMDGPUUtils -lLLVMAMDGPUInfo -lLLVMAArch64Disassembler -lLLVMMCDisassembler -lLLVMAArch64CodeGen -lLLVMCFGuard -lLLVMGlobalISel -lLLVMSelectionDAG -lLLVMAsmPrinter -lLLVMDebugInfoDWARF -lLLVMCodeGen -lLLVMTarget -lLLVMScalarOpts -lLLVMInstCombine -lLLVMAggressiveInstCombine -lLLVMTransformUtils -lLLVMBitWriter -lLLVMAnalysis -lLLVMProfileData -lLLVMObject -lLLVMTextAPI -lLLVMBitReader -lLLVMCore -lLLVMRemarks -lLLVMBitstreamReader -lLLVMAArch64AsmParser -lLLVMMCParser -lLLVMAArch64Desc -lLLVMMC -lLLVMDebugInfoCodeView -lLLVMDebugInfoMSF -lLLVMBinaryFormat -lLLVMAArch64Utils -lLLVMAArch64Info -lLLVMSupport -lLLVMDemangle -lclang -lclangIndex -lclangFrontend -lclangDriver -lclangSerialization -lclangParse -lclangSema -lclangAnalysis -lclangAST -lclangLex -lclangBasic -ldl -lpthread -ltinfo -lLLVMSupport -lz -lLLVMMC -lLLVMMCA -lclangTooling -lclangEdit -lclangCodeGen -fuse-ld=lld -g
 */
 
-
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -16,14 +16,24 @@ clang++ compile.cc -o main -L/usr/local/lib  -I/usr/local/include -std=c++14   -
 #include <llvm/IR/Module.h>
 #include <llvm/Support/TargetSelect.h>
 
+// JIT
+#include <llvm/ExecutionEngine/Orc/LLJIT.h>
+#include <llvm/ExecutionEngine/Orc/ThreadSafeModule.h>
+#include "llvm/ExecutionEngine/Orc/DebugUtils.h"
+#include "llvm/ExecutionEngine/Orc/LLJIT.h"
+#include "llvm/Support/InitLLVM.h"
+#include "llvm/Support/TargetSelect.h"
+#include <llvm/Support/raw_ostream.h>
+
 using namespace std;
 using namespace clang;
 using namespace llvm;
+using namespace llvm::orc;
 
 int main() {
 
     constexpr auto testCodeFileName = "test.cpp";
-    constexpr auto testCode = "int test() { return 2+2; }";
+    constexpr auto testCode = "int test(int x) { return x*2; }";
 
     InitializeAllTargetMCs();
     InitializeAllAsmPrinters();
@@ -74,5 +84,31 @@ int main() {
     auto module = compilerAction->takeModule();
     module->dump();
 
+    // Try to detect the host arch and construct an LLJIT instance.
+    auto JIT = LLJITBuilder().create();
+
+    // If we could not construct an instance, return an error.
+    if (!JIT) {
+        //(JIT.takeError());
+        cout << "Error in creating JIT" << endl;
+        return 0;
+    }
+    auto Ctx = std::make_unique<LLVMContext>();
+    // Add the module.
+    if (auto Err = JIT.get()->addIRModule(ThreadSafeModule(std::move(module), std::move(Ctx))))
+        std::cout  << " Failed in adding IR to JIT" << endl;
+        // return Err;
+
+    // Look up the JIT'd code entry point.
+    auto EntrySym = JIT.get()->lookup("_Z4testi");
+    if (!EntrySym)
+        cout << "Couldnt finnd symbol" << endl;
+        //return EntrySym.get().takeError();
+
+    // Cast the entry point address to a function pointer.
+    auto *Entry = (int(*)(int))EntrySym.get().getAddress();
+
+    // Call into JIT'd code.
+    cout << "OP of JIT:: " << Entry(2) << endl;;
     buffer.release();
 }
