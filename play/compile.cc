@@ -31,18 +31,18 @@ using namespace llvm;
 using namespace llvm::orc;
 
 int main() {
-
+    // Code to be JIT'ed
     constexpr auto testCodeFileName = "test.cpp";
-    constexpr auto testCode = "int test(int x) { return x*2; }";
+    constexpr auto testCode = "extern \"C\" int test(int x) { return x*2; }";
 
     InitializeAllTargetMCs();
     InitializeAllAsmPrinters();
 
-    // Prepare compilation arguments
+    // Command line arguments for clang
     vector<const char *> args;
     args.push_back(testCodeFileName);
 
-    // Prepare DiagnosticEngine 
+    // It depends on whole lot of classes, to do its job
     DiagnosticOptions DiagOpts;
     TextDiagnosticPrinter *textDiagPrinter =
             new clang::TextDiagnosticPrinter(errs(),
@@ -53,36 +53,36 @@ int main() {
                                          &DiagOpts,
                                          textDiagPrinter);
 
-    // Initialize CompilerInvocation
+    // CompilerInvocation init
     CompilerInvocation *CI = new CompilerInvocation();
     ArrayRef<const char *> aref(args.data(), args.data() + args.size());
     CompilerInvocation::CreateFromArgs(*CI, aref, *pDiagnosticsEngine);
 
-    // Map code filename to a memoryBuffer
+    // Code is in Memory and is being converted to IR
     StringRef testCodeData(testCode);
     unique_ptr<MemoryBuffer> buffer = MemoryBuffer::getMemBufferCopy(testCodeData);
     CI->getPreprocessorOpts().addRemappedFile(testCodeFileName, buffer.get());
 
 
-    // Create and initialize CompilerInstance
+    // Init CompilerInstance, the sheer number of classes is staggering.
     CompilerInstance Clang;
     std::shared_ptr<CompilerInvocation> ciptr(CI);
     Clang.setInvocation(ciptr);
     Clang.createDiagnostics();
 
-    // Set target (I guess I can initialize only the BPF target, but I don't know how)
+    // Set target as x86, can be changed to desired
     InitializeAllTargets();
     const std::shared_ptr<clang::TargetOptions> targetOptions = std::make_shared<clang::TargetOptions>();
-    targetOptions->Triple = string("bpf");
+    targetOptions->Triple = string("x86");
     TargetInfo *pTargetInfo = TargetInfo::CreateTargetInfo(*pDiagnosticsEngine,targetOptions);
     Clang.setTarget(pTargetInfo);
 
     // Create and execute action
-    // CodeGenAction *compilerAction = new EmitLLVMOnlyAction();
-    CodeGenAction *compilerAction = new EmitAssemblyAction();
+    CodeGenAction *compilerAction = new EmitLLVMOnlyAction();
+    // CodeGenAction *compilerAction = new EmitAssemblyAction(); // this will create an assemble file as well.
     Clang.ExecuteAction(*compilerAction);
     auto module = compilerAction->takeModule();
-    module->dump();
+    module->dump(); // Print out the IR
 
     // Try to detect the host arch and construct an LLJIT instance.
     auto JIT = LLJITBuilder().create();
@@ -93,17 +93,23 @@ int main() {
         cout << "Error in creating JIT" << endl;
         return 0;
     }
+    // We need context now
     auto Ctx = std::make_unique<LLVMContext>();
-    // Add the module.
-    if (auto Err = JIT.get()->addIRModule(ThreadSafeModule(std::move(module), std::move(Ctx))))
-        std::cout  << " Failed in adding IR to JIT" << endl;
-        // return Err;
 
-    // Look up the JIT'd code entry point.
-    auto EntrySym = JIT.get()->lookup("_Z4testi");
-    if (!EntrySym)
-        cout << "Couldnt finnd symbol" << endl;
+    // Add the module.
+    if (auto Err = JIT.get()->addIRModule(ThreadSafeModule(std::move(module), std::move(Ctx)))) {
+        std::cout  << " Failed in adding IR to JIT" << endl;
+        return 0;
+        // return Err;
+    }
+
+    // Look up the JIT'd code entry point, mangled name at the moment, have to fix this
+    auto EntrySym = JIT.get()->lookup("test");
+    if (!EntrySym) {
+        cout << "Couldnt find symbol" << endl;
         //return EntrySym.get().takeError();
+        return 0;
+    }
 
     // Cast the entry point address to a function pointer.
     auto *Entry = (int(*)(int))EntrySym.get().getAddress();
